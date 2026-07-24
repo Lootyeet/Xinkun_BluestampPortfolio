@@ -1,6 +1,6 @@
 **RFID Lockbox**
 
-The RFID Lockbox is a varient of the safe, where a normal safe uses a combinational lock this project uses a RFID tag sensor and tag. The project you will see below uses this mechanism to unlock and lock the safe through a solenoid, which in simple terms is a magnet that can be turned off and on; the RFID tag is inserted into a slot where it is read by the RFID tag sensor and if it isn't the correct tag then it will be kept in the safe. If the correct tag is inserted and read then it will turn the solenoid off and thus allow the user to open the safe to retrieve or place their valuables inside. 
+A normal safe uses a combinational lock the RFID Lockbox uses a RFID tag sensor and tag instead to control the lock. The project you will see below uses this mechanism to unlock and lock the safe through a solenoid, which in simple terms is a magnet that can be turned off and on; the RFID tag is inserted into a slot where it is read by the RFID tag sensor and if it isn't the correct tag then it will be kept in the safe. If the correct tag is inserted and read then it will turn the solenoid off and thus allow the user to open the safe to retrieve or place their valuables inside. 
 
 You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
