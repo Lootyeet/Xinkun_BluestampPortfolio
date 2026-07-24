@@ -56,15 +56,111 @@ Here's where you'll put images of your schematics. [Tinkercad](https://www.tinke
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
 ```c++
+#include <SPI.h> 
+#include <RFID.h>
+#include <Servo.h> 
+
+RFID rfid(10, 9);      
+unsigned char status; 
+unsigned char str[MAX_LEN]; 
+
+String accessGranted [1] = {"336871537"};  
+int accessGrantedSize = 1;                                
+
+Servo lockServo;                
+int lockPos = 75;               
+int unlockPos = 165;             
+boolean locked = true;
+
+int redLEDPin = 5;
+int greenLEDPin = 6;
+int solenoidPin = 8;
+
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("Hello World!");
+  Serial.begin(9600);     
+  SPI.begin();            
+  rfid.init();            
+  pinMode(redLEDPin, OUTPUT);     
+  pinMode(greenLEDPin, OUTPUT);
+  digitalWrite(redLEDPin, HIGH);
+  delay(200);
+  digitalWrite(greenLEDPin, HIGH);
+  delay(200);
+  digitalWrite(redLEDPin, LOW);
+  delay(200);
+  digitalWrite(greenLEDPin, LOW);
+  lockServo.attach(3);
+  lockServo.write(unlockPos);        
+  Serial.println("Place card/tag near reader...");
+  pinMode(solenoidPin, OUTPUT); 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+if (rfid.findCard(PICC_REQIDL, str) == MI_OK)   
+  { 
+    Serial.println("Card found"); 
+    String temp = "";                             
+    if (rfid.anticoll(str) == MI_OK)              
+    { 
+      Serial.print("The card's ID number is : "); 
+      for (int i = 0; i < 4; i++)                 
+      { 
+        temp = temp + (0x0F & (str[i] >> 4)); 
+        temp = temp + (0x0F & str[i]); 
+      } 
+      Serial.println (temp);
+      checkAccess (temp);     
+    } 
+    rfid.selectTag(str); 
+  }
+  rfid.halt();
+}
 
+void checkAccess (String temp)   
+{
+  boolean granted = false;
+  for (int i=0; i <= (accessGrantedSize-1); i++)   
+  {
+    if(accessGranted[i] == temp)           
+    {
+      Serial.println ("Access Granted");
+      granted = true;
+      if (locked == true)        
+      {
+          digitalWrite(solenoidPin, HIGH);
+          locked = false;
+      }
+      else if (locked == false)   
+      {
+          digitalWrite(solenoidPin, LOW);
+          locked = true;
+      }
+      digitalWrite(greenLEDPin, HIGH);   
+      delay(200);
+      digitalWrite(greenLEDPin, LOW);
+      delay(200);
+      digitalWrite(greenLEDPin, HIGH);
+      delay(200);
+      digitalWrite(greenLEDPin, LOW);
+      delay(200);
+    }
+  }
+  if (granted == false)     
+  {
+    Serial.println ("Access Denied");
+    lockServo.write(lockPos);
+    digitalWrite(redLEDPin, HIGH);     
+    delay(200);
+    digitalWrite(redLEDPin, LOW);
+    delay(200);
+    digitalWrite(redLEDPin, HIGH);
+    delay(200);
+    digitalWrite(redLEDPin, LOW);
+    lockServo.write(unlockPos);
+    delay(200);
+  }
 }
 ```
 
