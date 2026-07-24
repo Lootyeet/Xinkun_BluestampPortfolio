@@ -1,6 +1,6 @@
 **RFID Lockbox**
 
-Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
+The RFID Lockbox is a varient of the safe, where a normal safe uses a combinational lock this project uses a RFID tag sensor and tag. The project you will see below uses this mechanism to unlock and lock the safe through a solenoid, which in simple terms is a magnet that can be turned off and on; the RFID tag is inserted into a slot where it is read by the RFID tag sensor and if it isn't the correct tag then it will be kept in the safe. If the correct tag is inserted and read then it will turn the solenoid off and thus allow the user to open the safe to retrieve or place their valuables inside. 
 
 You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
