@@ -157,7 +157,7 @@ void checkAccess (String temp)
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| Solenoid | Used For Locking Mechanism | $9.99 | <a href="[https://www.amazon.com/KEYESTUDIO-Electromagnet-Module-Arduino-Environmental-Friendly/dp/B07H3V8N2Q/]"> Link </a> |
+| Solenoid | Used For Locking Mechanism | $9.99 | <a href="https://www.amazon.com/KEYESTUDIO-Electromagnet-Module-Arduino-Environmental-Friendly/dp/B07H3V8N2Q/"> Link </a> |
 | RFID Kit | Used As The Opening And Closing Activation Mechanism | $9.99 | <a href="[https://www.amazon.com/HiLetgo-3pcs-RFID-Kit-Raspberry/dp/B07VLDSYRW/]"> Link </a> |
 | Magnets | Used For Mechanisms In The Lockbox | $3.99 | <a href="[https://www.amazon.com/Towjug-Adhesive-3M-Anisotropy-whiteboards/dp/B0CQLHFSGF/]"> Link </a> |
 | Cardboard | Used To Make The Physical Lockbox | $7.99 | <a href="[https://www.amazon.com/Corrugated-Cardboard-Inserts-Shipping-Mailing/dp/B0GSJ7K4G7/]"> Link </a> |
