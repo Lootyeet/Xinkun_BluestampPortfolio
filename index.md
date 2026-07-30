@@ -169,6 +169,8 @@ void checkAccess (String temp)
 | Wire Strippers | Used To Strip The Power Jack Wires | $7.19 | <a href="https://www.amazon.com/ANGELSWORD-Stripper-Crimping-Crimper-Multi-Function/dp/B0DYP7CFZZ/"> Link </a> |
 | Safety Goggles | Used For Safety When Stripping The Wires | $12.99 | <a href="https://www.amazon.com/SUPERMORE-Protective-Wide-Vision-Adjustable-Lightweight/dp/B07VF3C2CW/"> Link </a> |
 | Scissors | Used To Cut The Cardboard And Tape | $9.97 | <a href="https://www.amazon.com/Westcott-13901-Straight-Titanium-Scissors/dp/B000P0LNRE/"> Link </a> |
+| 4 AA Battery Holder | Used To Hold The 4 AA Batteries That Power The Solenoid And Servo Motor | $5.98 | <a href="https://www.amazon.com/LAMPVPATH-Battery-Holder-Leads-Wires/dp/B07T7MTRZX"> Link </a> |
+| 4 AA Batteries | Used To Power The Solenoid And Servo Motor | $5.07 | <a href="https://www.amazon.com/Duracell-CopperTop-Batteries-All-Purpose-Household/dp/B00000JHQ6"> Link </a> |
 
 # Resources
 - [Video Guide](https://www.youtube.com/watch?v=_9unR083OPY)
