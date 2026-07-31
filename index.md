@@ -171,6 +171,7 @@ void checkAccess (String temp)
 | Scissors | Used To Cut The Cardboard And Tape | $9.97 | <a href="https://www.amazon.com/Westcott-13901-Straight-Titanium-Scissors/dp/B000P0LNRE/"> Link </a> |
 | 4 AA Battery Holder | Used To Hold The 4 AA Batteries That Power The Solenoid And Servo Motor | $5.98 | <a href="https://www.amazon.com/LAMPVPATH-Battery-Holder-Leads-Wires/dp/B07T7MTRZX"> Link </a> |
 | 4 AA Batteries | Used To Power The Solenoid And Servo Motor | $5.07 | <a href="https://www.amazon.com/Duracell-CopperTop-Batteries-All-Purpose-Household/dp/B00000JHQ6"> Link </a> |
+| Compact Splicing Connector Assortment| Used To Connect The Battery Pack To The Solenoid And Servo Motor | $12.45 | <a href="https://www.amazon.com/Compact-Splicing-Connector-Assortment-221-2401/dp/B0CJ5QF4Z2"> Link </a> |
 
 # Resources
 - [Video Guide](https://www.youtube.com/watch?v=_9unR083OPY)
