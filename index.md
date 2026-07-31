@@ -42,34 +42,69 @@ During the first milestone of this project, I used female-to-male wires, jumper 
 
 # Code
 
-```c++
+```cpp
 #include <SPI.h> 
 #include <RFID.h>
 #include <Servo.h> 
+#include <Keypad.h>
 
+// --- RFID SETUP ---
 RFID rfid(10, 9);      
 unsigned char status; 
 unsigned char str[MAX_LEN]; 
-
-String accessGranted [1] = {"336871537"};  
+String accessGranted[1] = {"336871537"};  
 int accessGrantedSize = 1;                                
 
+// --- KEYPAD SETUP ---
+const byte ROWS = 4; 
+const byte COLS = 4; 
+char keys[ROWS][COLS] = {
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+byte rowPins[ROWS] = {2, 4, 7, A0}; 
+byte colPins[COLS] = {A1, A2, A3, A4}; 
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+const int pinLength = 4;
+char secretPIN[pinLength] = {'1', '2', '3', '4'}; 
+char enteredPIN[pinLength];
+int currentPosition = 0;
+
+// --- STATE MACHINE & SECURITY TRACKING ---
+enum SystemState { WAITING_FOR_CARD, WAITING_FOR_PIN, SYSTEM_LOCKED };
+SystemState currentState = WAITING_FOR_CARD;
+
+int failedAttempts = 0;        
+unsigned long stateTimer = 0;  
+
+// Variables for the non-blocking green LED flash
+unsigned long flashTimer = 0;
+boolean greenLedState = LOW;
+
+// --- HARDWARE SETUP ---
 Servo lockServo;                
-int lockPos = 75;               
-int unlockPos = 165;             
+int lockPos = 75;               // Servo position to DROP the card
+int unlockPos = 165;            // Servo position to HOLD the card
 boolean locked = true;
 
 int redLEDPin = 5;
 int greenLEDPin = 6;
-int solenoidPin = 8;
+int solenoidPin = 8; 
 
-void setup() {
-  // put your setup code here, to run once:
+void setup() 
+{ 
   Serial.begin(9600);     
   SPI.begin();            
   rfid.init();            
+  
   pinMode(redLEDPin, OUTPUT);     
   pinMode(greenLEDPin, OUTPUT);
+  pinMode(solenoidPin, OUTPUT); 
+
+  // Startup LED sequence
   digitalWrite(redLEDPin, HIGH);
   delay(200);
   digitalWrite(greenLEDPin, HIGH);
@@ -77,77 +112,229 @@ void setup() {
   digitalWrite(redLEDPin, LOW);
   delay(200);
   digitalWrite(greenLEDPin, LOW);
+  
+  // Initialize trapdoor servo to the holding position
   lockServo.attach(3);
   lockServo.write(unlockPos);        
-  Serial.println("Place card/tag near reader...");
-  pinMode(solenoidPin, OUTPUT); 
+  
+  Serial.println("System Ready. Place card/tag in slot...");
+} 
+
+void loop() 
+{ 
+  switch (currentState) {
+    
+    // ==========================================
+    // STATE 1: WAITING FOR RFID CARD
+    // ==========================================
+    case WAITING_FOR_CARD: {
+      String scannedCard = checkRFID();
+      if (scannedCard != "") {
+        Serial.println("Card ID : " + scannedCard);
+        
+        if (isCardAuthorized(scannedCard)) {
+          Serial.println("Valid Card! You have 10 seconds to enter PIN...");
+          currentState = WAITING_FOR_PIN;
+          currentPosition = 0;
+          stateTimer = millis(); 
+          flashTimer = millis(); // Initialize the flashing timer
+        } else {
+          // Card is unauthorized. Trigger denied sequence AND drop the card!
+          executeAccessDenied(true); 
+        }
+      }
+      break;
+    }
+
+    // ==========================================
+    // STATE 2: WAITING FOR KEYPAD PIN
+    // ==========================================
+    case WAITING_FOR_PIN: {
+      // Non-blocking Green LED Flashing (Toggles every 250 milliseconds)
+      if (millis() - flashTimer >= 250) {
+        flashTimer = millis();
+        greenLedState = !greenLedState; 
+        digitalWrite(greenLEDPin, greenLedState);
+      }
+
+      // Check 10-Second Timeout
+      if (millis() - stateTimer > 10000) {
+        Serial.println("Timeout! Took too long to enter PIN.");
+        // False = Do not actuate servo, just flash red LEDs
+        executeAccessDenied(false);
+        failedAttempts++;
+        
+        if (failedAttempts >= 3) {
+          enterLockout();
+        } else {
+          resetToCardWait();
+        }
+      }
+
+      char key = keypad.getKey();
+      if (key) { 
+        enteredPIN[currentPosition] = key;
+        currentPosition++; 
+        Serial.print("*"); 
+
+        // If they entered 4 digits, check the PIN
+        if (currentPosition == pinLength) {
+          Serial.println(); 
+          
+          if (checkPINMatch()) {
+            executeAccessGranted();
+            failedAttempts = 0; 
+            resetToCardWait();
+          } else {
+            // Wrong PIN entered. Flash red LEDs, but DO NOT actuate the servo
+            executeAccessDenied(false);
+            failedAttempts++;
+            
+            if (failedAttempts >= 3) {
+              enterLockout();
+            } else {
+              Serial.println("Try again. You have 10 seconds.");
+              currentPosition = 0;
+              stateTimer = millis(); 
+            }
+          }
+        }
+      }
+      break;
+    }
+
+    // ==========================================
+    // STATE 3: SYSTEM LOCKED OUT
+    // ==========================================
+    case SYSTEM_LOCKED: {
+      // Check 1-Minute Timeout (60,000 milliseconds)
+      if (millis() - stateTimer >= 60000) {
+        Serial.println("Lockout period ended.");
+        exitLockout();
+      } else {
+        // Allow an authorized RFID card to override the lockout
+        String scannedCard = checkRFID();
+        if (scannedCard != "") {
+          if (isCardAuthorized(scannedCard)) {
+            Serial.println("Override Authorized! Lockout bypassed.");
+            digitalWrite(redLEDPin, LOW); 
+            
+            // Go straight to PIN entry mode
+            currentState = WAITING_FOR_PIN;
+            currentPosition = 0;
+            stateTimer = millis();
+            flashTimer = millis();
+            failedAttempts = 0;
+          } else {
+            // Someone tried to bypass the lockout with a fake card. Confiscate it!
+            Serial.println("Invalid override card! Confiscating...");
+            lockServo.write(lockPos); // Open trapdoor
+            delay(800);               // Wait for it to fall
+            lockServo.write(unlockPos); // Close trapdoor
+          }
+        }
+      }
+      break;
+    }
+  }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-if (rfid.findCard(PICC_REQIDL, str) == MI_OK)   
-  { 
-    Serial.println("Card found"); 
-    String temp = "";                             
-    if (rfid.anticoll(str) == MI_OK)              
-    { 
-      Serial.print("The card's ID number is : "); 
-      for (int i = 0; i < 4; i++)                 
-      { 
+// --- HELPER FUNCTIONS ---
+
+String checkRFID() {
+  String temp = "";
+  if (rfid.findCard(PICC_REQIDL, str) == MI_OK) { 
+    if (rfid.anticoll(str) == MI_OK) { 
+      for (int i = 0; i < 4; i++) { 
         temp = temp + (0x0F & (str[i] >> 4)); 
         temp = temp + (0x0F & str[i]); 
       } 
-      Serial.println (temp);
-      checkAccess (temp);     
     } 
     rfid.selectTag(str); 
   }
   rfid.halt();
+  return temp;
 }
 
-void checkAccess (String temp)   
-{
-  boolean granted = false;
-  for (int i=0; i <= (accessGrantedSize-1); i++)   
-  {
-    if(accessGranted[i] == temp)           
-    {
-      Serial.println ("Access Granted");
-      granted = true;
-      if (locked == true)        
-      {
-          digitalWrite(solenoidPin, HIGH);
-          locked = false;
-      }
-      else if (locked == false)   
-      {
-          digitalWrite(solenoidPin, LOW);
-          locked = true;
-      }
-      digitalWrite(greenLEDPin, HIGH);   
-      delay(200);
-      digitalWrite(greenLEDPin, LOW);
-      delay(200);
-      digitalWrite(greenLEDPin, HIGH);
-      delay(200);
-      digitalWrite(greenLEDPin, LOW);
-      delay(200);
-    }
+boolean isCardAuthorized(String temp) {
+  for (int i=0; i < accessGrantedSize; i++) {
+    if(accessGranted[i] == temp) return true;
   }
-  if (granted == false)     
-  {
-    Serial.println ("Access Denied");
-    lockServo.write(lockPos);
-    digitalWrite(redLEDPin, HIGH);     
-    delay(200);
-    digitalWrite(redLEDPin, LOW);
-    delay(200);
-    digitalWrite(redLEDPin, HIGH);
-    delay(200);
-    digitalWrite(redLEDPin, LOW);
-    lockServo.write(unlockPos);
+  return false;
+}
+
+boolean checkPINMatch() {
+  for (int i = 0; i < pinLength; i++) {
+    if (enteredPIN[i] != secretPIN[i]) return false; 
+  }
+  return true; 
+}
+
+void executeAccessGranted() {
+  Serial.println("Access Granted - 2FA Successful");
+  
+  // Turn green LED solid to indicate success
+  digitalWrite(greenLEDPin, HIGH); 
+  
+  if (locked == true) {
+      digitalWrite(solenoidPin, HIGH);
+      locked = false;
+  } else {
+      digitalWrite(solenoidPin, LOW);
+      locked = true;
+  }
+  
+  // Hold the solid green LED on for 2 seconds so the user can see it
+  delay(2000); 
+}
+
+void executeAccessDenied(boolean dropCard) {
+  // Immediately turn off the flashing green LED
+  digitalWrite(greenLEDPin, LOW); 
+  
+  Serial.println("Access Denied");
+
+  if (dropCard) {
+    Serial.println("Dropping unauthorized card into lockbox...");
+    lockServo.write(lockPos); // Open the trapdoor
+  }
+  
+  // Red LED angry blinks (Takes about 800ms)
+  for(int i=0; i<2; i++){
+    digitalWrite(redLEDPin, HIGH); delay(200);
+    digitalWrite(redLEDPin, LOW); delay(200);
+  }
+
+  if (dropCard) {
+    lockServo.write(unlockPos); // Close the trapdoor
     delay(200);
   }
+}
+
+void enterLockout() {
+  // Ensure green LED is off during lockout
+  digitalWrite(greenLEDPin, LOW); 
+  
+  Serial.println("MAX ATTEMPTS REACHED. SYSTEM LOCKED FOR 1 MINUTE.");
+  currentState = SYSTEM_LOCKED;
+  stateTimer = millis(); 
+  digitalWrite(redLEDPin, HIGH); 
+}
+
+void exitLockout() {
+  failedAttempts = 0; 
+  digitalWrite(redLEDPin, LOW); 
+  resetToCardWait();
+}
+
+void resetToCardWait() {
+  // Ensure the green LED is off when returning to standby mode
+  digitalWrite(greenLEDPin, LOW); 
+  
+  currentState = WAITING_FOR_CARD;
+  currentPosition = 0;
+  Serial.println("-----------------------------------");
+  Serial.println("System Ready. Place card/tag in slot...");
 }
 ```
 
