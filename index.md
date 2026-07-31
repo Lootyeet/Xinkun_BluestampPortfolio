@@ -40,8 +40,7 @@ During the first milestone of this project, I used female-to-male wires, jumper 
 
 # Code
 
-<details>
-<summary><b>Click to expand the complete 2FA Smart Safe C++ Code</b></summary>
+<div style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
   
 ```cpp
 #include <SPI.h> 
