@@ -341,6 +341,7 @@ void resetToCardWait() {
   Serial.println("System Ready. Place card/tag in slot...");
 }
 ```
+
 </details>
 
 # Bill of Materials
