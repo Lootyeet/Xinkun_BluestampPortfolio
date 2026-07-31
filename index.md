@@ -6,8 +6,6 @@ A normal safe uses a combination lock; the RFID Lockbox uses an RFID tag sensor 
 |:--:|:--:|:--:|:--:|
 | Xinkun L. | Canyon Crest Academy | Electrical Engineering | Incoming Junior
 
-**Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
-
 ![Headstone Image](logo.svg)
   
 # Final Milestone
