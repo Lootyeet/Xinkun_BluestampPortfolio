@@ -40,7 +40,7 @@ During the first milestone of this project, I used female-to-male wires, jumper 
 
 # Code
 
-<div style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+<div style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;" markdown="1">
   
 ```cpp
 #include <SPI.h> 
@@ -337,6 +337,7 @@ void resetToCardWait() {
   Serial.println("System Ready. Place card/tag in slot...");
 }
 ```
+</div>
 
 # Bill of Materials
 
