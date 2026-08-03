@@ -42,10 +42,25 @@ At Milestone 2 Completion:
 ![TinkerCAD Circuit](docs/assets/css/Circuit.png)
 
 # Code
-<details>
-<summary><b>Click to expand RFID Lockbox C++ Code</b></summary>
+<div style="
+  height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+">
+  <pre style="
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+  "><code>
 
-```cpp
 #include <SPI.h> 
 #include <RFID.h>
 #include <Servo.h> 
@@ -60,7 +75,7 @@ String accessGranted[1] = {"336871537"};
 int accessGrantedSize = 1;
 
 // ---> YOUR ADMIN CARD ID <---
-String adminCard = "10124421207"; 
+String adminCard = "67749163"; 
 
 // --- KEYPAD SETUP ---
 const byte ROWS = 4; 
@@ -434,9 +449,9 @@ void resetToCardWait() {
   Serial.println("-----------------------------------");
   Serial.println("System Ready. Place card/tag in slot...");
 }
-```
 
-</details>
+  </code></pre>
+</div>
 
 # Bill of Materials
 
