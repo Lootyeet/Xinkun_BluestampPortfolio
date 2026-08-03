@@ -42,14 +42,11 @@ At Milestone 2 Completion:
 ![TinkerCAD Circuit](docs/assets/css/Circuit.png)
 
 # Code
-<div style="height: 350px; overflow-y: auto; background-color: #1e1e1e; padding: 15px; border-radius: 8px;" markdown="1">
+<button onclick="copyCode()" style="margin-bottom: 10px; padding: 8px 12px; background-color: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">📋 Copy Code</button>
+
+<div id="codeContainer" style="height: 350px; overflow-y: auto; background-color: #1e1e1e; padding: 15px; border-radius: 8px;" markdown="1">
 
 ```cpp
-#include <SPI.h>
-#include <RFID.h>
-#include <Servo.h> 
-#include <Keypad.h>
-#include <EEPROM.h>
 
 #include <SPI.h> 
 #include <RFID.h>
@@ -443,6 +440,19 @@ void resetToCardWait() {
 }
 ```
 </div>
+
+<script>
+function copyCode() {
+  const codeBlock = document.querySelector('#codeContainer code');
+  if (codeBlock) {
+    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+      alert('Code successfully copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+  }
+}
+</script>
 
 # Bill of Materials
 
