@@ -42,24 +42,14 @@ At Milestone 2 Completion:
 ![TinkerCAD Circuit](docs/assets/css/Circuit.png)
 
 # Code
-<div style="
-  height: 350px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #1e1e1e;
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-">
-  <pre style="
-    margin: 0;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    font-family: Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.5;
-  "><code>
+<div style="height: 350px; overflow-y: auto; background-color: #1e1e1e; padding: 15px; border-radius: 8px;" markdown="1">
+
+```cpp
+#include <SPI.h>
+#include <RFID.h>
+#include <Servo.h> 
+#include <Keypad.h>
+#include <EEPROM.h>
 
 #include <SPI.h> 
 #include <RFID.h>
@@ -450,7 +440,8 @@ void resetToCardWait() {
   Serial.println("System Ready. Place card/tag in slot...");
 }
 
-  </code></pre>
+}
+```
 </div>
 
 # Bill of Materials
