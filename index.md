@@ -42,12 +42,10 @@ At Milestone 2 Completion:
 ![TinkerCAD Circuit](docs/assets/css/Circuit.png)
 
 # Code
-
 <details>
 <summary><b>Click to expand RFID Lockbox C++ Code</b></summary>
 
 ```cpp
-
 #include <SPI.h> 
 #include <RFID.h>
 #include <Servo.h> 
