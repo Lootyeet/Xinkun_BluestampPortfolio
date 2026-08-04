@@ -6,7 +6,7 @@ A normal safe uses a combination lock; the RFID Lockbox uses an RFID tag sensor 
 |:--:|:--:|:--:|:--:|
 | Xinkun L. | Canyon Crest Academy | Electrical Engineering | Incoming Junior
 
-![Headstone Image](docs/assets/css/IMG_6340.HEIC)
+![Headstone Image](docs/assets/css/Headstone.png)
   
 # Final Milestone
 
