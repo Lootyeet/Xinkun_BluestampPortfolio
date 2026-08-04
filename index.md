@@ -466,11 +466,6 @@ function copyCode() {
 | Uno R3 Project | Used To Create The Circuit | $59.99 | <a href="https://www.amazon.com/EL-KIT-001-Project-Complete-Starter-Tutorial/dp/B01CZTLHGE/"> Link </a> |
 | Tape | Used To Keep Everything Together | $4.48 | <a href="https://www.amazon.com/Scotch-3105-Magic-Tape-Pack/dp/B071VP1PC6/"> Link </a> |
 | Batteries | Used To Power The Circuit | $5.99 | <a href="https://www.amazon.com/PKCELL-9V-Batteries-Battery-Detector/dp/B09MFQPQFY/"> Link </a> |
-| Power Jack | Used To Connect The Extra Battery To The Solenoid | $3.97 | <a href="https://www.amazon.com/Battery-Connector-Electronics-Experiment-Research/dp/B0D9VT2FMF/"> Link </a> |
-| Screwdriver Kit | Used For The Step Down Chip | $5.69 | <a href="https://www.amazon.com/Screwdriver-Different-Flathead-Screwdrivers-Precision/dp/B08ZS76VDG?th=1"> Link </a> |
-| Step Down Chip | Used To Lower The Voltage Of The 9V Battery To 5V That Is Connected To The Solenoid | $6.99 | <a href="https://www.amazon.com/Seloky-Converter-Regulator-Adjustable-Voltmeter/dp/B0DM946DHG/"> Link </a> |
-| Wire Strippers | Used To Strip The Power Jack Wires | $7.19 | <a href="https://www.amazon.com/ANGELSWORD-Stripper-Crimping-Crimper-Multi-Function/dp/B0DYP7CFZZ/"> Link </a> |
-| Safety Goggles | Used For Safety When Stripping The Wires | $12.99 | <a href="https://www.amazon.com/SUPERMORE-Protective-Wide-Vision-Adjustable-Lightweight/dp/B07VF3C2CW/"> Link </a> |
 | Scissors | Used To Cut The Cardboard And Tape | $9.97 | <a href="https://www.amazon.com/Westcott-13901-Straight-Titanium-Scissors/dp/B000P0LNRE/"> Link </a> |
 | 4 AA Battery Holder | Used To Hold The 4 AA Batteries That Power The Solenoid And Servo Motor | $5.98 | <a href="https://www.amazon.com/LAMPVPATH-Battery-Holder-Leads-Wires/dp/B07T7MTRZX"> Link </a> |
 | 4 AA Batteries | Used To Power The Solenoid And Servo Motor | $5.07 | <a href="https://www.amazon.com/Duracell-CopperTop-Batteries-All-Purpose-Household/dp/B00000JHQ6"> Link </a> |
